@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Form Table</title>
+    <link rel="stylesheet" href="/table_design.css"/>
+</head>
+<body>
+<div th:if="${criteria.getId() < 4}" class="content" th:fragment="fragment">
+    <style>
+        .content {
+            margin-top: 30px;
+        }
+
+        /* Table css */
+        table {
+            width: 100%;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f8f9fa !important;
+        }
+
+        .space-between {
+            margin-left: 7px;
+            margin-right: 10px;
+        }
+
+        h5 {
+            margin-bottom: 15px;
+            margin-top: 10px;
+        }
+
+        a {
+            text-decoration: none; /* This removes the underline from all anchor tags */
+        }
+        .action-column, .points-column {
+            width: 150px;
+            text-align: center;
+        }
+
+        .action-column {
+            vertical-align: middle;
+        }
+
+        .action-column form,
+        .action-column a {
+            display: inline-block;
+            margin: 0;
+        }
+
+        /* Success, edit, delete alert windows */
+        .alert {
+            padding: 5px 10px;
+            color: white;
+            margin-bottom: 15px;
+            line-height: 1.5;
+            margin-top: 0;
+        }
+
+        .alert-add{
+            background-color: #4BB543;
+        }
+
+        .alert-edit{
+            background-color: #E9C874;
+        }
+
+        .alert-delete{
+            background-color: #A34343;
+        }
+
+        .alert-close {
+            margin-left: 15px;
+            color: white;
+            font-weight: bold;
+            float: right;
+            font-size: 20px;
+            line-height: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+    </style>
+
+    <!-- Add, edit and delete alert messages -->
+    <div th:if="${successMessageTable}" class="alert alert-add">
+        <span class="alert-close" onclick="this.parentElement.style.display='none';">&times;</span>
+        <span th:text="${successMessageTable}"></span>
+    </div>
+    <div th:if="${editMessageTable}" class="alert alert-edit">
+        <span class="alert-close" onclick="this.parentElement.style.display='none';">&times;</span>
+        <span th:text="${editMessageTable}"></span>
+    </div>
+    <div th:if="${deleteMessageTable}" class="alert alert-delete">
+        <span class="alert-close" onclick="this.parentElement.style.display='none';">&times;</span>
+        <span th:text="${deleteMessageTable}"></span>
+    </div>
+
+    <h5 th:text="${criteria.getName()}"></h5>
+    <table class="table" id="tbl">
+        <thead>
+        <tr>
+            <th scope="col">Година</th>
+            <th scope="col">Предмет</th>
+            <th scope="col">Тип (П/А/Л)</th>
+            <th scope="col">Број на часови</th>
+            <th scope="col">Број на студенти</th>
+            <th scope="col" class="action-column">Акција</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <!-- Add form -->
+            <form name="add-form-no" th:method="post" th:action="@{'/Criteria/NO/' + ${criteria.getId()}}">
+                <td><input required type="text" id="yearOfStudies" name="yearOfStudies"></td>
+                <td>
+                    <select id="select-subject" name="subjectId" class="form-select"
+                            aria-label="Default select example">
+                        <option th:each="s : ${subjects}"
+                                th:value="${s.id}"
+                                th:text="${s.name}">
+                        </option>
+                    </select>
+                </td>
+                <td>
+                    <select id="select-type" name="typeOfClass" class="form-select" aria-label="Default select example">
+                        <option th:each="type : ${typeOfClassOptions}"
+                                th:value="${type.name}"
+                                th:text="${type.name}">
+                        </option>
+                    </select>
+                </td>
+                <td><input required type="number" id="numberOfClasses" name="numberOfClasses"></td>
+                <td><input  required type="number" id="numberOfStudents" name="numberOfStudents"></td>
+                <td class="action-column"><input type="submit" name="add-submit" value="Submit" class="btn btn-outline-secondary"></td>
+            </form>
+        </tr>
+
+        <!-- Edit and Display Rows -->
+        <tr th:each="item : ${noCriteriaList}">
+            <!-- Edit Form -->
+            <form name="edit-form-no" th:if="${noCriteriaId == item.getId()}" th:method="POST"
+                  th:action="@{'/Criteria/NO/' + ${criteria.getId()} + '/' + ${noCriteriaId}}">
+                <td><input required type="text" name="yearOfStudies" th:value="${item.getSchoolYear()}"></td>
+                <td>
+                    <select name="subjectId" class="form-select" aria-label="Default select example">
+                        <option th:each="s : ${subjects}"
+                                th:value="${s.name}"
+                                th:text="${s.name}"
+                                th:selected="${s.name == item.getSubject()}">
+                        </option>
+                    </select>
+                </td>
+                <td>
+                    <select name="typeOfClass" class="form-select" aria-label="Default select example">
+                        <option th:each="type : ${typeOfClassOptions}"
+                                th:value="${type.name}"
+                                th:text="${type.name}"
+                                th:selected="${type.name == item.getTypeOfClass().toString()}">
+                        </option>
+                    </select>
+                </td>
+                <td><input required type="number" name="numberOfClasses" th:value="${item.getNumberOfClasses()}"></td>
+                <td><input required type="number" name="numberOfStudents" th:value="${item.getStudents()}"></td>
+                <td class="action-column"><input type="submit" name="edit-submit" value="Save" class="btn btn-outline-secondary"></td>
+            </form>
+
+            <!-- Display Data -->
+            <td th:if="${noCriteriaId != item.getId()}" th:text="${item.getSchoolYear()}"></td>
+            <td th:if="${noCriteriaId != item.getId()}" th:text="${item.getSubject()}"></td>
+            <td th:if="${noCriteriaId != item.getId()}" th:text="${item.getTypeOfClass()}"></td>
+            <td th:if="${noCriteriaId != item.getId()}" th:text="${item.getNumberOfClasses()}"></td>
+            <td th:if="${noCriteriaId != item.getId()}" th:text="${item.getStudents()}"></td>
+            <td th:if="${noCriteriaId != item.getId()}" class="action-column">
+                <a class="edit-button" th:href="@{/Criteria/NO(noCriteriaId=${item.getId()}, criteriaId=${criteria.getId()})}">
+                    <i class="fa-regular fa-pen-to-square fa-lg space-between edit-icon"></i>
+                </a>
+                <form th:action="@{'/Criteria/NO/delete/' + ${criteria.getId()} + '/' + ${item.getId()}}" th:method="DELETE" class="delete-button" style="display: inline;">
+                    <button type="submit">
+                        <i class="fa-solid fa-trash fa-l delete-icon"></i>
+                    </button>
+                </form>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="5" style="border: none;"></td>
+            <td  class="points-column" style="background-color: #f8f9fa; font-weight: bold;">Вкупно: <span th:text="${calculatedNOPoints}"></span></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

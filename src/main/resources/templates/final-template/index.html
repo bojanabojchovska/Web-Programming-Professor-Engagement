@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}"
+      xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/table_design.css"/>
+    <style>
+        table {
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+
+        .fixed-width {
+            width: 300px;
+            text-align: center;
+        }
+
+        .index-column {
+            width: 100px;
+            text-align: center;
+        }
+
+        .criteria-column {
+            width: auto;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        tfoot td {
+            border: none;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content" class="content">
+    <p class="display-6" style="text-align: center; margin: 30px 0 70px 0; padding: 0 50px">
+        АНЕКС КОН ИЗВЕШТАЈОТ ЗА ИЗБОР ВО НАСТАВНО-НАУЧНО, НАУЧНО, НАСТАВНО-СТРУЧНО И СОРАБОТНИЧКО ЗВАЊЕ
+    </p>
+    <div id="usr" style="text-decoration: underline; margin-bottom: 20px; margin-top: -30px;">
+        <h3 th:text="'Кандидат: ' + ${user.name}"></h3>
+    </div>
+
+    <div id="no">
+        <h4>НАСТАВНО-ОБРАЗОВНА ДЕЈНОСТ</h4>
+        <table>
+            <thead>
+            <tr class="table-header">
+                <th class="index-column">Ред. број</th>
+                <th class="criteria-column">Назив на активноста:</th>
+                <th class="fixed-width">Поени</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="criteria, i: ${noCriteriaList}">
+                <td th:text="${i.index + 1}"></td>
+                <td th:text="${criteria.name}"></td>
+                <td th:text="${criteria.points}"></td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td></td>
+                <td></td>
+                <td class="text-blue" style="border: 1px solid  #ddd; font-size: 20px; font-weight: bold;"
+                    th:text="'ВКУПНО:&nbsp;&nbsp;&nbsp;' + ${noPoints}"></td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <div id="ni">
+        <h4>НАУЧНОИСТРАЖУВАЧКА ДЕЈНОСТ</h4>
+        <table>
+            <thead>
+            <tr class="table-header">
+                <th class="index-column">Ред. број</th>
+                <th class="criteria-column">Назив на активноста:</th>
+                <th class="fixed-width">Поени</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="criteria, i: ${niCriteriaList}">
+                <td th:text="${i.index + 1}"></td>
+                <td th:text="${criteria.name}"></td>
+                <td th:text="${criteria.points}"></td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td></td>
+                <td></td>
+                <td class="text-blue" style="border: 1px solid  #ddd; font-size: 20px; font-weight: bold;"
+                    th:text="'ВКУПНО:&nbsp;&nbsp;&nbsp;' + ${niPoints}"></td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <div id="sp">
+        <h4>СТРУЧНО-ПРИМЕНУВАЧКА ДЕЈНОСТ</h4>
+        <table>
+            <thead>
+            <tr class="table-header">
+                <th class="index-column">Ред. број</th>
+                <th class="criteria-column">Назив на активноста:</th>
+                <th class="fixed-width">Поени</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="criteria, i: ${spCriteriaListFalse}">
+                <td th:text="${i.index + 1}"></td>
+                <td th:text="${criteria.name}"></td>
+                <td th:text="${criteria.points}"></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td style="border-right: none; border-left: none; font-weight: bold; font-size: 20px;">Дејности од поширок интерес</td>
+                <td></td>
+            </tr>
+            <tr th:each="criteria, i: ${spCriteriaListTrue}">
+                <td th:text="${i.index + 1}"></td>
+                <td th:text="${criteria.name}"></td>
+                <td th:text="${criteria.points}"></td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td></td>
+                <td></td>
+                <td class="text-blue" style="border: 1px solid  #ddd; font-size: 20px; font-weight: bold;"
+                    th:text="'ВКУПНО:&nbsp;&nbsp;&nbsp;' + ${spPoints}"></td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <div>
+        <table>
+            <thead>
+            <tr class="table-header">
+                <th class="criteria-column">ПРОФЕСИОНАЛНИ РЕФЕРЕНЦИ НА КАНДИДАТОТ ЗА ИЗБОР ВО ЗВАЊЕ</th>
+                <th class="fixed-width">Поени</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>НАСТАВНО-ОБРАЗОВНА ДЕЈНОСТ</td>
+                <td th:text="${noPoints}"></td>
+            </tr>
+            <tr>
+                <td>НАУЧНОИСТРАЖУВАЧКА ДЕЈНОСТ</td>
+                <td th:text="${niPoints}"></td>
+            </tr>
+            <tr>
+                <td>СТРУЧНО-ПРИМЕНУВАЧКА ДЕЈНОСТ</td>
+                <td th:text="${spPoints}"></td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td></td>
+                <td class="text-blue" style="border: 1px solid  #ddd; font-size: 20px; font-weight: bold;"
+                    th:text="'ВКУПНО:&nbsp;&nbsp;&nbsp;' + ${totalPoints}"></td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+</body>
+</html>

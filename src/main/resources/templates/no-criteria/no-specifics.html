@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>NO</title>
+    <style>
+        #title {
+            margin-bottom: 40px;
+            font-size: 36px;
+        }
+        .search-input-small {
+            flex: 1;
+            height: 30px;
+            background: transparent;
+            border: 0;
+            outline: 0;
+            font-size: 15px;
+            color: #333;
+        }
+        .bold-label {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        /* Submit button css */
+        .btn-submit {
+            background-color: #478CCF;
+            color: #fff;
+            border: none;
+            border-radius: 30px;
+            padding: 5px 12px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-submit:hover {
+            background-color: #1677e3;
+            color: #fff;
+        }
+
+        .btn-submit:focus, .btn-submit:active {
+            background-color: #478CCF;
+            outline: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Kon stavki button css */
+        .custom-button {
+            color: #478CCF;
+            cursor: pointer;
+            display: inline-block;
+            font-family: inherit;
+            font-size: 0.9em;
+            line-height: 24px;
+            padding: 3px 8px;
+            margin-bottom: 50px;
+            text-align: left;
+            text-decoration: none;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            vertical-align: middle;
+            width: auto;
+            white-space: nowrap;
+            transition: text-decoration 0.3s ease, background-color 0.3s ease;
+            border: none;
+            background-color: #f7f7f7;
+            border-radius: 5px;
+        }
+
+        .custom-button:hover {
+            text-decoration: underline;
+            background-color: #e0e0e0;
+        }
+
+        .custom-button:focus {
+            border-color: #008296;
+            box-shadow: rgba(213, 217, 217, .5) 0 2px 5px 0;
+            outline: 0;
+        }
+
+        .custom-button .fa {
+            margin-right: 5px;
+        }
+
+        /* Success alert window */
+        .alert {
+            padding: 5px 10px;
+            color: white;
+            margin-bottom: 15px;
+            line-height: 1.5;
+            margin-top: -30px;
+        }
+
+        .alert-add {
+            background-color: #4BB543;
+        }
+
+        .alert-close {
+            margin-left: 15px;
+            color: white;
+            font-weight: bold;
+            float: right;
+            font-size: 20px;
+            line-height: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <h3 id="title">Критериуми во областа на Наставна-Образовна дејност</h3>
+
+    <!-- Success alert message -->
+    <div th:if="${successMessage}" class="alert alert-add">
+        <span class="alert-close" onclick="this.parentElement.style.display='none';">&times;</span>
+        <span th:text="${successMessage}"></span>
+    </div>
+    <div class="row">
+
+        <!--  Teaching criteria input  -->
+        <div class="col">
+            <form th:method="post" th:action="@{'/Criteria/NO/teaching'}">
+                <div class="mb-3">
+                    <label class="bold-label">Настава во школи и работилници</label>
+                    <br>
+                    <div class="form-check">
+                        <input type="radio" name="role" class="form-check-input" id="semester1" value="manager">
+                        <label class="form-check-label" for="semester1">Раководител</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="radio" name="role" class="form-check-input" id="typeOfClass1" value="participant">
+                        <label class="form-check-label" for="typeOfClass1">Учесник</label>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="bold-label">Подготовка на нов предмет</label>
+                    <br>
+                    <div class="form-check">
+                        <input type="radio" name="type" class="form-check-input" id="semester2" value="lecture">
+                        <label class="form-check-label" for="semester2">Предавање</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="radio" name="type" class="form-check-input" id="typeOfClass2" value="exercises">
+                        <label class="form-check-label" for="typeOfClass2">Вежби</label>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-submit">Submit</button>
+            </form>
+        </div>
+        <br/>
+
+        <!--  Membership criteria input  -->
+        <div class="col">
+            <form th:method="post" th:action="@{'/Criteria/NO/membership'}">
+                <label class="bold-label" for="selected-id-member">Критериуми за менторство / членство во комисија</label><br/>
+
+                <div class="search-box small-search-box">
+                    <div class="search-row">
+                        <input required class="search-input-small" type="text" id="input-box-member" placeholder="Search" autocomplete="off">
+                        <input  type="hidden" id="selected-id-member" name="criteriaId">
+                        <button type="submit" class="search-button"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    </div>
+                    <div class="result-box-member">
+                        <ul>
+                            <li  th:each="cr : ${membershipCriteriaList}"
+                                 th:data-value="${cr.id}"
+                                 th:text="${cr.name}"></li>
+                        </ul>
+                    </div>
+                </div>
+                <br/>
+                <label style="font-size: 15px;" for="numberOfStudentsForMentorship">Број на студенти: </label>
+                <input required type="text" name="numberOfStudentsForMentorship" class="form-text-input" id="numberOfStudentsForMentorship">
+                <button type="submit" class="btn btn-submit">Submit</button>
+            </form>
+            <br/>
+
+            <!--  WorkTitle criteria input  -->
+            <form th:method="post" th:action="@{'/Criteria/NO/workTitle'}">
+                <label class="bold-label" for="input-box-work">Критериуми за учебници / дела</label><br/>
+                <div class="search-box small-search-box">
+                    <div class="search-row">
+                        <input required class="search-input-small" type="text" id="input-box-work" placeholder="Search" autocomplete="off">
+                        <input type="hidden" id="selected-id-work" name="criteriaId">
+                        <button type="submit" class="search-button"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    </div>
+                    <div class="result-box-work">
+                        <ul>
+                            <li   th:each="cr : ${workCriteriaList}"
+                                  th:data-value="${cr.id}"
+                                  th:text="${cr.name}"></li>
+                        </ul>
+                    </div>
+                </div>
+                <br/>
+                <label for="titleOfWork">Наслов: </label>
+                <input required type="text" name="titleOfWork" class="form-text-input" id="titleOfWork">
+                <button type="submit" class="btn btn-submit">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <!--  Items page button  -->
+    <a th:href="@{/Criteria/NO/items}" class="custom-button">
+        Кон ставки <i class="fa fa-arrow-right"></i>
+    </a>
+    <br/>
+    <h5 class="bold-label">Критериуми за циклус</h5>
+
+    <script>
+        // Script for Work Search Bar
+        document.addEventListener("DOMContentLoaded", function () {
+            const resultBoxWork = document.querySelector(".result-box-work");
+            const inputBoxWork = document.getElementById("input-box-work");
+            const listItemsWork = document.querySelectorAll(".result-box-work ul li");
+            const selectedIdInputWork = document.getElementById("selected-id-work");
+
+            inputBoxWork.addEventListener("click", function () {
+                console.log("Input box clicked");
+                resultBoxWork.style.display = "block";
+            });
+
+            inputBoxWork.addEventListener("input", function () {
+                let input = inputBoxWork.value.toLowerCase();
+                console.log("Input value:", input);
+                listItemsWork.forEach(function (item) {
+                    if (item.textContent.toLowerCase().includes(input)) {
+                        item.style.display = "block";
+                    } else {
+                        item.style.display = "none";
+                    }
+                });
+            });
+
+            listItemsWork.forEach(function (item) {
+                item.addEventListener("click", function () {
+                    console.log("Item clicked:", item.textContent);
+                    selectedIdInputWork.value = item.getAttribute("data-value");
+                    console.log("this is selected id input member: " + selectedIdInputWork.value )
+                    inputBoxWork.value = item.textContent;
+                    resultBoxWork.style.display = "none";
+
+                    //  searchForm.submit();
+                });
+            });
+
+            document.addEventListener("click", function (event) {
+                if (!event.target.closest(".search-box")) {
+                    resultBoxWork.style.display = "none";
+                }
+            });
+        });
+
+        // Script for Membership Search Bar
+        document.addEventListener("DOMContentLoaded", function () {
+            const resultBoxMember = document.querySelector(".result-box-member");
+            const inputBoxMember = document.getElementById("input-box-member");
+            const listItemsMember = document.querySelectorAll(".result-box-member ul li");
+            const selectedIdInputMember = document.getElementById("selected-id-member");
+
+            inputBoxMember.addEventListener("click", function () {
+                console.log("Input box clicked");
+                resultBoxMember.style.display = "block";
+            });
+
+            inputBoxMember.addEventListener("input", function () {
+                let input = inputBoxMember.value.toLowerCase();
+                console.log("Input value:", input);
+                listItemsMember.forEach(function (item) {
+                    if (item.textContent.toLowerCase().includes(input)) {
+                        item.style.display = "block";
+                    } else {
+                        item.style.display = "none";
+                    }
+                });
+            });
+
+            listItemsMember.forEach(function (item) {
+                item.addEventListener("click", function () {
+                    console.log("Item clicked:", item.textContent);
+                    selectedIdInputMember.value = item.getAttribute("data-value");
+                    console.log("this is selected id input member: " + selectedIdInputMember.value )
+                    inputBoxMember.value = item.textContent;
+                    resultBoxMember.style.display = "none";
+
+                    //  searchForm.submit();
+                });
+            });
+
+            document.addEventListener("click", function (event) {
+                if (!event.target.closest(".search-box")) {
+                    resultBoxMember.style.display = "none";
+                }
+            });
+        });
+    </script>
+</body>
+</html>

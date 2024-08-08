@@ -1,0 +1,114 @@
+<html>
+<div th:fragment="fragment">
+    <link rel="stylesheet" href="/table_design.css"/>
+    <style>
+        a {
+            text-decoration: none; /* This removes the underline from all anchor tags */
+        }
+        .alert {
+            padding: 5px 10px;
+            color: white;
+            margin-bottom: 15px;
+            line-height: 1.5;
+            margin-top: 0px;
+        }
+        .alert-add {
+            background-color: #4BB543; /* Green for add */
+        }
+        .alert-edit {
+            background-color: #E9C874; /* Yellow for edit */
+        }
+        .alert-delete {
+            background-color: #A34343; /* Red for delete */
+        }
+        .alert-close {
+            margin-left: 15px;
+            color: white;
+            font-weight: bold;
+            float: right;
+            font-size: 20px;
+            line-height: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+    </style>
+    <br/>
+    <div th:if="${addMessage}" class="alert alert-add">
+        <span class="alert-close" onclick="this.parentElement.style.display='none';">&times;</span>
+        <span th:text="${addMessage}"></span>
+    </div>
+    <div th:if="${editMessage}" class="alert alert-edit">
+        <span class="alert-close" onclick="this.parentElement.style.display='none';">&times;</span>
+        <span th:text="${editMessage}"></span>
+    </div>
+    <div th:if="${deleteMessage}" class="alert alert-delete">
+        <span class="alert-close" onclick="this.parentElement.style.display='none';">&times;</span>
+        <span th:text="${deleteMessage}"></span>
+    </div>
+    <h4>Детали за менторство</h4>
+    <br/>
+        <table>
+            <thead>
+            <tr class="table-header">
+
+                <th class="column-20">Наслов</th>
+                <th class="column-20">Финансирано од:</th>
+                <th class="column-20">Почеток</th>
+                <th class="column-20">Крај</th>
+
+                <th style="text-align: center; width: 10%">Акција</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <form name="ni-add-form-projects" th:method="post" th:action="@{'/Criteria/NI/projects/' + ${criteria.id}}">
+                    <td><input required type="text" id="Title" name="Title"></td>
+                    <td><input type="text" id="fundedBy" name="fundedBy"></td>
+                    <td><input required type="text" id="yearStart" name="yearStart"></td>
+                    <td><input required type="text" id="yearEnd" name="yearEnd"></td>
+                    <td class="action-column"><input type="submit" name="add-submit" value="Submit" class="btn btn-outline-secondary"></td>
+                </form>
+            </tr>
+
+            <tr th:each="item : ${projects}">
+                <form name="ni-edit-form-projects" th:if="${niCriteriaId == item.getId()}"  th:method="post"
+                      th:action="@{'/Criteria/NI/edit/projects/' + ${criteria.id} + '/' + ${item.id}}">
+                    <td><input required type="text" name="Title" th:value="${item.Title}"></td>
+                    <td><input type="text" name="fundedBy" th:value="${item.fundedBy}"></td>
+                    <td><input required type="text" name="yearStart" th:value="${item.yearStart}"></td>
+                    <td><input required type="text" name="yearEnd" th:value="${item.yearEnd}"></td>
+                    <td class="action-column"><input type="submit" name="edit-submit" value="Save" class="btn btn-outline-secondary"></td>
+                </form>
+
+                <!-- Display Data -->
+                <td th:if="${niCriteriaId != item.getId()}" th:text="${item.Title}"></td>
+                <td th:if="${niCriteriaId != item.getId()}" th:text="${item.fundedBy}"></td>
+                <td th:if="${niCriteriaId != item.getId()}" th:text="${item.yearStart}"></td>
+                <td th:if="${niCriteriaId != item.getId()}" th:text="${item.yearEnd}"></td>
+
+                <td th:if="${niCriteriaId != item.getId()}" class="action-column">
+                    <a class="edit-button" th:href="@{/Criteria/NI(niCriteriaId=${item.getId()}, criteriaId=${criteria.getId()})}">
+                        <i class="fa-regular fa-pen-to-square fa-lg space-between edit-icon" style="color: #6962AD"></i>
+                    </a>
+                    <form th:action="@{'/Criteria/NI/delete/projects/' + ${criteria.getId()} + '/' + ${item.getId()}}" th:method="post" style="display: inline;">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button type="submit" style="background: none; border: none; padding: 0; cursor: pointer;">
+                            <i class="fa-solid fa-trash fa-l delete-icon" style="color: #6962AD"></i>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            <tr>
+                <td style="border: none"></td>
+                <td style="border: none"></td>
+                <td style="border: none"></td>
+                <td style="border: none"></td>
+                <td style="background-color: #f8f9fa; font-weight: bold">Вкупно: <span th:text="${calculatedPoints}"></span></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+</html>

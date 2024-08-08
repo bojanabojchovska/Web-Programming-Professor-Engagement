@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}"
+      xmlns:layout="http://www.w3.org/1999/xhtml">
+    <style>
+        .content {
+            padding: 20px; /* Adjust the padding as needed */
+        }
+    </style>
+
+<div layout:fragment="content">
+    <div class="col-md-7 col-lg-8 content">
+        <br/>
+
+
+        <div th:replace="~{${specifics}}"></div>
+
+        <br/>
+        <form th:method="get" th:action="@{'/Criteria/' + ${field}}">
+            <label for="form-select">Select Your Criteria</label><br/>
+            <select id="form-select" name="criteriaId" class="form-select" aria-label="Default select example">
+                <option th:each="cr : ${criteriaList}"
+                        th:value="${cr.id}"
+                        th:text="${cr.name}">
+                </option>
+            </select>
+            <br/>
+            <button type="submit" class="btn btn-success">Next</button>
+        </form>
+    </div>
+
+    <div th:if="${showDetails}">
+        <div>
+            <table class="table" id="tbl">
+                <thead>
+                <tr>
+                    <th scope="col">Име</th>
+                    <th scope="col">Година</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Add Form -->
+                <tr>
+                    <form name="sp-add-form" th:method="post" th:action="'/Criteria/SP/'+ ${criteriaId}" >
+                        <td><input type="text" id="name" name="name"></td>
+                        <td><input type="text" id="year" name="year"></td>
+                        <td><input type="submit" name="add-submit" value="Submit" class="btn btn-outline-secondary"></td>
+                    </form>
+                </tr>
+
+                <!-- Edit and Display Rows -->
+                <tr th:each="item : ${spCriteriaList}">
+                    <!-- Edit Form -->
+                    <form name="sp-edit-form" th:if="${spCriteriaId == item.getId()}" th:method="POST"
+                          th:action="@{'/Criteria/SP/' + ${criteria.getId()} + '/' + ${spCriteriaId}}">
+                        <td><input type="text" name="name" th:value="${item.getName()}"></td>
+                        <td><input type="text" name="year" th:value="${item.getYear()}"></td>
+                        <td><input type="submit" name="edit-submit" value="Save" class="btn btn-outline-secondary"></td>
+                    </form>
+
+                    <!-- Display Data -->
+                    <td th:if="${spCriteriaId != item.getId()}" th:text="${item.getName()}"></td>
+                    <td th:if="${spCriteriaId != item.getId()}" th:text="${item.getYear()}"></td>
+                    <td th:if="${spCriteriaId != item.getId()}">
+                        <a class="btn btn-outline-secondary"
+                           th:href="@{/Criteria/SP(spCriteriaId=${item.getId()}, criteriaId=${criteria.getId()})}">Edit</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+</html>

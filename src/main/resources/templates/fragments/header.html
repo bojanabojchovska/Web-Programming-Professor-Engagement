@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<body>
+<header class="p-3 text-bg-dark" th:fragment="header">
+
+    <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start d-print-none">
+        <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+            <img src="/io.png" style="width: 25px"/>
+        </a>
+
+        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+            <li>
+                <a href="/Criteria/NO" class="nav-link px-4 text-white">Критериуми во Наставно-Образовна Дејност</a>
+               </li>
+            <li>
+                <a href="/Criteria/NI" class="nav-link px-4 text-white">Критериуми во Научноистражувачка Дејност</a>
+            </li>
+            <li>
+                <a href="/Criteria/SP" class="nav-link px-4 text-white">Критериуми во Стручно-Применувачка Дејност</a>
+            </li>
+            <li>
+                <a href="/FinalTemplate" class="nav-link px-4 text-white">Образец</a>
+            </li>
+        </ul>
+
+
+        <div class="text-end" sec:authorize="isAuthenticated()">
+<!--            <span sec:authentication="name"></span>-->
+<!--            <span sec:authentication="principal.authorities">[ROLE_USER, ROLE_ADMIN]</span>-->
+        </div>
+   </div>
+
+</header>
+</body>
+</html>

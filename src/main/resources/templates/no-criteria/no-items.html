@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Items page</title>
+    <style>
+        .content {
+            margin-top: 20px;
+        }
+        h4{
+            margin-top: 30px;
+        }
+
+        /* Table css */
+        table {
+            width: 100%;
+            margin-bottom: 20px;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .table-header {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+        .criteria-column {
+            width: 30%;
+        }
+        .students-column, .work-title-column {
+            width: 20%;
+        }
+        .action-column {
+            width: 5%;
+            text-align: center;
+        }
+        .action-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        input[type="number"], input[type="text"] {
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .first-table {
+            width: 50%;
+        }
+
+        /* Back button */
+        .back-button {
+            color: #000;
+            cursor: pointer;
+            display: inline-block;
+            font-family: inherit;
+            font-size: 0.9em;
+            line-height: 24px;
+            padding: 3px 8px;
+            margin-top: 10px;
+            text-align: left;
+            text-decoration: none;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            vertical-align: middle;
+            width: auto;
+            white-space: nowrap;
+            transition: text-decoration 0.3s ease, background-color 0.3s ease;
+            border: none;
+            background-color: #f7f7f7;
+            border-radius: 5px;
+        }
+
+        .back-button:hover {
+            text-decoration: underline;
+            background-color: #e0e0e0;
+        }
+
+        .back-button:focus {
+            border-color: #008296;
+            box-shadow: rgba(213, 217, 217, .5) 0 2px 5px 0;
+            outline: 0;
+        }
+
+        .back-button .fa {
+            margin-right: 5px;
+        }
+
+        /* Edit and delete alert windows */
+        .alert {
+            padding: 5px 10px;
+            color: white;
+            margin-bottom: 15px;
+            line-height: 1.5;
+            margin-top: 0;
+        }
+
+        .alert-edit{
+            background-color: #E9C874;
+        }
+
+        .alert-delete{
+            background-color: #A34343;
+        }
+
+        .alert-close {
+            margin-left: 15px;
+            color: white;
+            font-weight: bold;
+            float: right;
+            font-size: 20px;
+            line-height: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div layout:fragment="content" class="content">
+
+        <!-- Edit and delete alert messages -->
+        <div th:if="${editMessage}" class="alert alert-edit">
+            <span class="alert-close" onclick="this.parentElement.style.display='none';">&times;</span>
+            <span th:text="${editMessage}"></span>
+        </div>
+        <div th:if="${deleteMessage}" class="alert alert-delete">
+            <span class="alert-close" onclick="this.parentElement.style.display='none';">&times;</span>
+            <span th:text="${deleteMessage}"></span>
+        </div>
+
+        <!-- Teaching Criteria Table -->
+        <h4>Критериуми за настава</h4>
+        <table>
+            <thead>
+            <tr class="table-header">
+                <th class="criteria-column">Име на критериум</th>
+                <th class="action-column">Акција</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${teachingCriteriaList}">
+                <td class="criteria-column first-table" th:text="${item.getCriteria().getName()}"></td>
+                <td class="action-column">
+                    <div class="action-container">
+                        <form th:action="@{'/Criteria/NO/deleteItem/' + ${item.getCriteria().getId()} + '/' + ${item.getId()}}" th:method="DELETE" style="display: inline;">
+                            <button type="submit" class="delete-button">
+                                <i class="fa-solid fa-trash fa-l delete-icon"></i>
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- Mentorship Criteria Table -->
+        <h4>Критериуми за менторство / членство во комисија</h4>
+        <table>
+            <thead>
+            <tr class="table-header">
+                <th class="criteria-column">Име на критериум</th>
+                <th class="work-title-column">Број на студенти</th>
+                <th class="action-column">Акција</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${mentorshipCriteriaList}">
+                <td class="criteria-column" th:text="${item.getCriteria().getName()}"></td>
+                <td class="work-title-column" th:if="${noCriteriaId != item.getId()}" ><span th:text="${item.getStudentsForMentorship()}"></span></td>
+                <form  name="edit-form-no" th:if="${noCriteriaId == item.getId()}" th:method="POST"
+                       th:action="@{'/Criteria/NO/editItem/' + ${item.getCriteria().getId()} + '/' + ${noCriteriaId}}"> <td class="work-title-column" th:if="${noCriteriaId == item.getId()}">
+
+                    <input type="number" name="studentsForMentorship" th:value="${item.getStudentsForMentorship()}">
+                </td>
+                    <td class="action-column" th:if="${noCriteriaId == item.getId()}"> <input type="submit" name="edit-submit" value="Save" class="btn btn-outline-secondary"></td>
+                </form>
+
+                <td th:if="${noCriteriaId != item.getId()}"  class="action-column">
+                    <div class="action-container">
+                        <a class="edit-button" th:href="@{/Criteria/NO/items(noCriteriaId=${item.getId()}, criteriaId=${item.getCriteria().getId()})}">
+                            <i class="fa-regular fa-pen-to-square fa-lg edit-icon"></i>
+                        </a>
+                        <form th:action="@{'/Criteria/NO/deleteItem/' + ${item.getCriteria().getId()} + '/' + ${item.getId()}}" th:method="DELETE" style="display: inline;">
+                            <button type="submit" class="delete-button">
+                                <i class="fa-solid fa-trash fa-l delete-icon"></i>
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- Work Title Criteria Table -->
+        <h4>Критериуми за учебници / дела</h4>
+        <table>
+            <thead>
+            <tr class="table-header">
+                <th class="criteria-column">Име на критериум</th>
+                <th class="work-title-column">Наслов</th>
+                <th class="action-column">Акција</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${workCriteriaList}">
+                <td class="criteria-column" th:text="${item.getCriteria().getName()}"></td>
+                <td th:if="${noCriteriaId != item.getId()}" > <span th:text="${item.getNameOfWorkTitle()}"></span></td>
+                <form name="edit-form-no" th:method="POST"
+                      th:action="@{'/Criteria/NO/editItem/' + ${item.getCriteria().getId()} + '/' + ${noCriteriaId}}">
+                    <td class="work-title-column" th:if="${noCriteriaId == item.getId()}" ><input type="text" name="nameOfWorkTitle" th:value="${item.getNameOfWorkTitle()}"></td>
+                    <td th:if="${noCriteriaId == item.getId()}" ><input type="submit" name="edit-submit" value="Save" class="btn btn-outline-secondary"></td>
+                </form>
+
+
+                <td th:if="${noCriteriaId != item.getId()} " class="action-column">
+                    <div class="action-container">
+                        <a class="edit-button" th:href="@{/Criteria/NO/items(noCriteriaId=${item.getId()}, criteriaId=${item.getCriteria().getId()})}">
+                            <i class="fa-regular fa-pen-to-square fa-lg edit-icon"></i>
+                        </a>
+                        <form th:action="@{'/Criteria/NO/deleteItem/' + ${item.getCriteria().getId()} + '/' + ${item.getId()}}" th:method="DELETE" style="display: inline;">
+                            <button type="submit" class="delete-button">
+                                <i class="fa-solid fa-trash fa-l delete-icon"></i>
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- Back button -->
+        <div>
+            <a href="/Criteria/NO" class="back-button">
+                <i class="fa fa-arrow-left"></i> Назад
+            </a>
+        </div>
+    </div>
+</body>
+</html>
