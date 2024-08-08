@@ -28,7 +28,7 @@ This is a Spring Boot application that allows professors to manage and track act
 ![izborzvanje4](https://github.com/user-attachments/assets/cc544b40-f3e5-4106-9afc-d96c6bcbf5c6)
 
 ## Adding an Activity in the Second Area
-![izborzvanje2](https://github.com/user-attachments/assets/879dd6e6-97b1-4b69-a7f5-57db060f62a7)
+![izborzvanje2](https://github.com/user-attachments/assets/dc3388f7-b56a-44d9-bc1c-7d365e2f4960)
 
 ## Editing an Activity in the Third Area
 ![izborzvanje3](https://github.com/user-attachments/assets/90677c20-5632-4b7b-b265-e151bade14af)
