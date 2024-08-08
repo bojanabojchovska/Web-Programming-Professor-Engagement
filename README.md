@@ -20,3 +20,18 @@ This is a Spring Boot application that allows professors to manage and track act
 - **Thymeleaf:** For rendering views and handling the front-end logic.
 - **Spring Data JPA:** For interacting with the database, with queries written in the repository layer.
 - **PostgreSQL:** The database used to store professor and activity data.
+
+## First Area 
+![izborzvanje1](https://github.com/user-attachments/assets/3ce84970-ffb1-4d9e-a62b-5d10e57387e1)
+
+## Deleting an Activity from the First Area
+![izborzvanje4](https://github.com/user-attachments/assets/cc544b40-f3e5-4106-9afc-d96c6bcbf5c6)
+
+## Adding an Activity in the Second Area
+![izborzvanje2](https://github.com/user-attachments/assets/879dd6e6-97b1-4b69-a7f5-57db060f62a7)
+
+## Editing an Activity in the Third Area
+![izborzvanje3](https://github.com/user-attachments/assets/90677c20-5632-4b7b-b265-e151bade14af)
+
+## Final Template with final points
+![izborzvanje5](https://github.com/user-attachments/assets/8cd31620-77d7-46cd-8577-b9cf9afa6a0e)
