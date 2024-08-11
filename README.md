@@ -1,5 +1,5 @@
 # Web-Programming
-# Professor Engagement System
+# Professor Engagement System for Faculty of Computer Science and Engineering Services
 
 ## Description
 This is a Spring Boot application that allows professors to manage and track activities. The application follows the Model-View-Controller (MVC) pattern and is built using Java with Spring Boot. It leverages Thymeleaf for the view layer and connects to a database for data persistence.
